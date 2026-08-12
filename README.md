@@ -10,7 +10,7 @@
 
 | 항목 | URL |
 |---|---|
-| 🌐 **라이브 데모** | **<https://grasssystemthreejs.vercel.app>** |
+| 🌐 **라이브 데모** | **<https://sigco3111.github.io/GrassSystemThreeJS>** |
 | 📦 **이 저장소 (한국어 fork)** | <https://github.com/sigco3111/GrassSystemThreeJS> |
 | ⭐ **원본 저장소 (출처)** | <https://github.com/achrefelouafi/GrassSystemThreeJS> |
 
@@ -20,7 +20,7 @@
 
 ## ✨ 라이브 데모 둘러보기
 
-브라우저에서 **<https://grasssystemthreejs.vercel.app>** 을 열면 즉시 절차적 토양 스튜디오를 만날 수 있습니다.
+브라우저에서 **<https://sigco3111.github.io/GrassSystemThreeJS>** 을 열면 즉시 절차적 토양 스튜디오를 만날 수 있습니다.
 
 **조작 방법**
 
@@ -68,7 +68,7 @@
 - **🔄 이중 언어 지원** — `src/i18n.js` 모듈로 한국어 / 영어 토글 가능
 - **🛡️ 식별자 침투 0건** — Three.js 객체 / 셰이더 유니폼 / GLB 키 모두 원본 그대로 보존
 - **✅ Vite 빌드 통과** — 750KB / 194KB gzip
-- **🚀 Vercel 프로덕션 배포** — `<https://grasssystemthreejs.vercel.app>`
+- **🚀 Vercel 프로덕션 배포** — `<https://sigco3111.github.io/GrassSystemThreeJS>`
 
 ### 한국어화 번역 매핑 예시 (대표 항목)
 
@@ -271,7 +271,7 @@ vite.config.js        Vite 기본 설정
 
 ### 5️⃣ Vercel 자동 도메인 사용
 
-CLI 가 준 첫 URL (`grasssystemthreejs-...-sigco3111s-projects.vercel.app`) 은 Production Deployment Protection SSO 가드가 걸려 302 → 로그인 리다이렉트. **자동 할당된 production 도메인** (`grasssystemthreejs.vercel.app`) 은 보호 없음.
+CLI 가 준 첫 URL (`grasssystemthreejs-...-sigco3111s-projects.vercel.app`) 은 Production Deployment Protection SSO 가드가 걸려 302 → 로그인 리다이렉트. **자동 할당된 production 도메인** (`sigco3111.github.io/GrassSystemThreeJS`) 은 보호 없음.
 
 ### 6️⃣ main.js 1,155 라인 — 한 번에 17개 폴더 패치
 
@@ -349,6 +349,6 @@ SOFTWARE.
 | **원본 HEAD** | (원본 저장소 마지막 커밋) |
 | **한국어 fork HEAD** | (feat: 한글화 + i18n.js) |
 | **배포 플랫폼** | Vercel |
-| **라이브 도메인** | <https://grasssystemthreejs.vercel.app> |
+| **라이브 도메인** | <https://sigco3111.github.io/GrassSystemThreeJS> |
 
 🪨 **즐거운 토양 조각하기 되세요!**
