@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
 import GUI from 'lil-gui';
+import { t } from './i18n.js';
 import { createPostFX } from './postfx.js';
 import { createGrass } from './grass.js';
 import { createModelSystem } from './model.js';
@@ -706,47 +707,47 @@ function applyTextureScale(scale) {
 loadTextures();
 loadMossTextures();
 
-const gui = new GUI({ title: '🪨 Soil Studio' });
+const gui = new GUI({ title: t('guiTitle') });
 
 /* --- Material -------------------------------------------------------------- */
-const fMat = gui.addFolder('Material');
+const fMat = gui.addFolder(t('folderMaterial'));
 const groundParams = { material: 'Ground103' };
 fMat
   .add(groundParams, 'material', ['Ground048', 'Ground103'])
-  .name('Ground Texture')
+  .name(t('materialBase'))
   .onChange((v) => {
     SOIL_PREFIX = `/${v}_1K-JPG_`;
     loadTextures(); // rebuilds allMaps and re-applies the current texture scale
   });
 fMat
   .add(params, 'textureScale', 0.5, 20, 0.1)
-  .name('Texture Scale')
+  .name(t('textureScale'))
   .onChange(applyTextureScale);
 fMat
   .add(params, 'normalIntensity', 0, 3, 0.01)
-  .name('Normal Intensity')
+  .name(t('normalStrength'))
   .onChange((v) => material.normalScale.set(v, v));
 fMat
   .add(params, 'aoIntensity', 0, 3, 0.01)
-  .name('AO Intensity')
+  .name(t('envIntensity'))
   .onChange((v) => (material.aoMapIntensity = v));
 fMat
   .add(params, 'roughnessIntensity', 0, 2, 0.01)
-  .name('Roughness Intensity')
+  .name(t('roughnessIntensity') || t('roughness'))
   .onChange((v) => (material.roughness = v));
 fMat
   .add(params, 'displacementScale', 0, 1, 0.001)
-  .name('Texture Displacement')
+  .name(t('displacement'))
   .onChange((v) => (material.displacementScale = v));
 fMat.close();
 
 /* --- Soil shaping & shading ------------------------------------------------ */
-const fSoil = gui.addFolder('Soil Surface');
+const fSoil = gui.addFolder(t('folderSoil'));
 
-const fShape = fSoil.addFolder('Mounds & Relief');
-fShape.add(soilUniforms.uMoundScale, 'value', 0.02, 0.8, 0.001).name('Mound Scale');
-fShape.add(soilUniforms.uSeed.value, 'x', -50, 50, 0.1).name('Seed X').listen();
-fShape.add(soilUniforms.uSeed.value, 'y', -50, 50, 0.1).name('Seed Y').listen();
+const fShape = fSoil.addFolder(t('folderMounds'));
+fShape.add(soilUniforms.uMoundScale, 'value', 0.02, 0.8, 0.001).name(t('moundScale'));
+fShape.add(soilUniforms.uSeed.value, 'x', -50, 50, 0.1).name(t('seedX')).listen();
+fShape.add(soilUniforms.uSeed.value, 'y', -50, 50, 0.1).name(t('seedY')).listen();
 fShape
   .add(
     {
@@ -758,25 +759,25 @@ fShape
     },
     'randomize'
   )
-  .name('🎲 Randomize Seed');
+  .name(t('randomizeSeed'));
 fShape.add(soilUniforms.uMoundDepth, 'value', 0, 3, 0.01).name('Mound Height');
-fShape.add(soilUniforms.uMoundCoverage, 'value', 0, 1, 0.01).name('Coverage');
+fShape.add(soilUniforms.uMoundCoverage, 'value', 0, 1, 0.01).name(t('coverage'));
 fShape.add(soilUniforms.uMoundEdge, 'value', 0.001, 0.4, 0.001).name('Coverage Softness');
-fShape.add(soilUniforms.uBumpScale, 'value', 0.1, 3, 0.01).name('Relief Scale');
-fShape.add(soilUniforms.uBumpStrength, 'value', 0, 2, 0.01).name('Relief Strength');
+fShape.add(soilUniforms.uBumpScale, 'value', 0.1, 3, 0.01).name(t('reliefScale'));
+fShape.add(soilUniforms.uBumpStrength, 'value', 0, 2, 0.01).name(t('reliefStrength'));
 fShape.add(soilUniforms.uReliefShading, 'value', 0, 1, 0.01).name('Relief Shading');
 
-const fLook = fSoil.addFolder('Tone & Color');
+const fLook = fSoil.addFolder(t('folderTone'));
 fLook
   .addColor({ c: '#ffffff' }, 'c')
   .name('Soil Tint')
   .onChange((v) => soilUniforms.uSoilColor.value.set(v));
 fLook.add(soilUniforms.uVarAmount, 'value', 0, 1, 0.01).name('Tone Variation');
 fLook.add(soilUniforms.uVarScale, 'value', 0.01, 0.5, 0.001).name('Variation Scale');
-fLook.add(soilUniforms.uVarCoverage, 'value', 0, 1, 0.01).name('Coverage');
+fLook.add(soilUniforms.uVarCoverage, 'value', 0, 1, 0.01).name(t('coverage'));
 fLook.add(soilUniforms.uVarEdge, 'value', 0.001, 0.4, 0.001).name('Patch Softness');
-fLook.add(soilUniforms.uVarSeed.value, 'x', -50, 50, 0.1).name('Seed X').listen();
-fLook.add(soilUniforms.uVarSeed.value, 'y', -50, 50, 0.1).name('Seed Y').listen();
+fLook.add(soilUniforms.uVarSeed.value, 'x', -50, 50, 0.1).name(t('seedX')).listen();
+fLook.add(soilUniforms.uVarSeed.value, 'y', -50, 50, 0.1).name(t('seedY')).listen();
 fLook
   .add(
     {
@@ -788,14 +789,14 @@ fLook
     },
     'randomize'
   )
-  .name('🎲 Randomize Seed');
+  .name(t('randomizeSeed'));
 
-const fWet = fSoil.addFolder('Moisture');
-fWet.add(soilUniforms.uMoisture, 'value', 0, 1, 0.01).name('Coverage');
+const fWet = fSoil.addFolder(t('folderMoisture'));
+fWet.add(soilUniforms.uMoisture, 'value', 0, 1, 0.01).name(t('coverage'));
 fWet.add(soilUniforms.uMoistEdge, 'value', 0.001, 0.4, 0.001).name('Patch Softness');
 fWet.add(soilUniforms.uMoistScale, 'value', 0.02, 0.8, 0.001).name('Patch Scale');
-fWet.add(soilUniforms.uMoistSeed.value, 'x', -50, 50, 0.1).name('Seed X').listen();
-fWet.add(soilUniforms.uMoistSeed.value, 'y', -50, 50, 0.1).name('Seed Y').listen();
+fWet.add(soilUniforms.uMoistSeed.value, 'x', -50, 50, 0.1).name(t('seedX')).listen();
+fWet.add(soilUniforms.uMoistSeed.value, 'y', -50, 50, 0.1).name(t('seedY')).listen();
 fWet
   .add(
     {
@@ -807,23 +808,23 @@ fWet
     },
     'randomize'
   )
-  .name('🎲 Randomize Seed');
+  .name(t('randomizeSeed'));
 fWet.add(soilUniforms.uWetDarken, 'value', 0.2, 1, 0.01).name('Wet Darkening');
 fWet.add(soilUniforms.uWetRoughness, 'value', 0.05, 1, 0.01).name('Wet Gloss');
 
-const fCrack = fSoil.addFolder('Dry Cracks');
+const fCrack = fSoil.addFolder(t('folderCracks'));
 const crackParams = { enabled: false }; // disabled by default
 fCrack
   .add(crackParams, 'enabled')
-  .name('Enabled')
+  .name(t('enabled'))
   .onChange((v) => (soilUniforms.uCrackEnabled.value = v ? 1.0 : 0.0));
 fCrack.add(soilUniforms.uCrackAmount, 'value', 0, 1, 0.01).name('Crack Amount');
 fCrack.add(soilUniforms.uCrackScale, 'value', 0.1, 3, 0.01).name('Plate Density');
 fCrack.add(soilUniforms.uCrackWidth, 'value', 0.01, 0.25, 0.001).name('Channel Width');
 fCrack.add(soilUniforms.uCrackWarp, 'value', 0, 2, 0.01).name('Edge Meander');
 fCrack.add(soilUniforms.uCrackDepth, 'value', 0, 2, 0.01).name('Crack Depth');
-fCrack.add(soilUniforms.uCrackSeed.value, 'x', -50, 50, 0.1).name('Seed X').listen();
-fCrack.add(soilUniforms.uCrackSeed.value, 'y', -50, 50, 0.1).name('Seed Y').listen();
+fCrack.add(soilUniforms.uCrackSeed.value, 'x', -50, 50, 0.1).name(t('seedX')).listen();
+fCrack.add(soilUniforms.uCrackSeed.value, 'y', -50, 50, 0.1).name(t('seedY')).listen();
 fCrack
   .add(
     {
@@ -835,7 +836,7 @@ fCrack
     },
     'randomize'
   )
-  .name('🎲 Randomize Seed');
+  .name(t('randomizeSeed'));
 
 fShape.close();
 fLook.close();
@@ -844,19 +845,19 @@ fCrack.close();
 fSoil.close();
 
 /* --- Moss cover ------------------------------------------------------------ */
-const fMoss = gui.addFolder('🌿 Moss Cover');
+const fMoss = gui.addFolder(t('folderMoss'));
 const mossParams = { enabled: false }; // disabled by default
 fMoss
   .add(mossParams, 'enabled')
-  .name('Enabled')
+  .name(t('mossEnabled'))
   .onChange((v) => (mossUniforms.uMossEnabled.value = v ? 1.0 : 0.0));
 
-const fMossMask = fMoss.addFolder('Coverage Mask');
-fMossMask.add(mossUniforms.uMossCoverage, 'value', 0, 1, 0.01).name('Coverage');
-fMossMask.add(mossUniforms.uMossScale, 'value', 0.02, 0.8, 0.001).name('Patch Scale');
-fMossMask.add(mossUniforms.uMossEdge, 'value', 0.001, 0.4, 0.001).name('Patch Softness');
-fMossMask.add(mossUniforms.uMossSeed.value, 'x', -50, 50, 0.1).name('Seed X').listen();
-fMossMask.add(mossUniforms.uMossSeed.value, 'y', -50, 50, 0.1).name('Seed Y').listen();
+const fMossMask = fMoss.addFolder(t('folderMossMask'));
+fMossMask.add(mossUniforms.uMossCoverage, 'value', 0, 1, 0.01).name(t('mossCoverage'));
+fMossMask.add(mossUniforms.uMossScale, 'value', 0.02, 0.8, 0.001).name(t('mossMaskScale'));
+fMossMask.add(mossUniforms.uMossEdge, 'value', 0.001, 0.4, 0.001).name(t('mossEdge'));
+fMossMask.add(mossUniforms.uMossSeed.value, 'x', -50, 50, 0.1).name(t('seedX')).listen();
+fMossMask.add(mossUniforms.uMossSeed.value, 'y', -50, 50, 0.1).name(t('seedY')).listen();
 fMossMask
   .add(
     {
@@ -868,22 +869,22 @@ fMossMask
     },
     'randomize'
   )
-  .name('🎲 Randomize Seed');
+  .name(t('randomizeSeed'));
 fMossMask.close();
 
-const fMossVol = fMoss.addFolder('Height Volume');
+const fMossVol = fMoss.addFolder(t('folderMossVol'));
 fMossVol.add(mossUniforms.uMossDepth, 'value', 0, 1, 0.005).name('Thickness');
 fMossVol.add(mossUniforms.uMossBumpScale, 'value', 0.1, 3, 0.01).name('Relief Scale');
 fMossVol.add(mossUniforms.uMossBumpStrength, 'value', 0, 2, 0.01).name('Relief Strength');
 fMossVol.close();
 
-const fMossLook = fMoss.addFolder('Texture & Shading');
+const fMossLook = fMoss.addFolder(t('folderMossLook'));
 fMossLook.add(mossUniforms.uMossTextureScale, 'value', 0.05, 2, 0.005).name('Texture Scale');
 fMossLook
   .addColor({ c: '#ffffff' }, 'c')
   .name('Moss Tint')
   .onChange((v) => mossUniforms.uMossColor.value.set(v));
-fMossLook.add(mossUniforms.uMossRoughness, 'value', 0, 2, 0.01).name('Roughness');
+fMossLook.add(mossUniforms.uMossRoughness, 'value', 0, 2, 0.01).name(t('roughness'));
 fMossLook.add(mossUniforms.uMossNormalScale, 'value', 0, 3, 0.01).name('Normal Intensity');
 fMossLook.add(mossUniforms.uMossAoStrength, 'value', 0, 2, 0.01).name('AO Intensity');
 fMossLook.close();
@@ -891,17 +892,17 @@ fMossLook.close();
 fMoss.close();
 
 /* --- Model + moss accumulation --------------------------------------------- */
-const fModel = gui.addFolder('🚗 Model');
+const fModel = gui.addFolder(t('folderModel'));
 const modelState = { showModel: false };
 fModel
   .add(modelState, 'showModel')
-  .name('Load Model')
+  .name(t('modelLoad'))
   .onChange((v) => model.setVisible(v));
 
 const modelSelect = { active: 'Rusty Car' };
 fModel
   .add(modelSelect, 'active', Object.keys(MODELS))
-  .name('Model')
+  .name(t('modelPick'))
   .onChange((k) => model.loadModel(MODELS[k]));
 
 const fileInput = document.getElementById('glb-input');
@@ -926,15 +927,15 @@ fModel.add(modelTransform, 'posY', -5, 10, 0.01).name('Position Y').onChange(app
 fModel.add(modelTransform, 'posZ', -10, 10, 0.01).name('Position Z').onChange(applyModelTransform);
 fModel.add(modelTransform, 'rotY', 0, 360, 1).name('Rotation Y°').onChange(applyModelTransform);
 
-const fAccum = fModel.addFolder('Moss Accumulation');
+const fAccum = fModel.addFolder(t('folderAccum'));
 // The master on/off lives in the Moss Cover folder (uMossEnabled, shared) — the
 // model mosses over exactly when the ground moss is enabled.
-fAccum.add(model.moss.uMossCoverage, 'value', 0, 1, 0.01).name('Coverage');
+fAccum.add(model.moss.uMossCoverage, 'value', 0, 1, 0.01).name(t('accumCoverage'));
 fAccum.add(model.moss.uMossThickness, 'value', 0, 0.3, 0.001).name('Thickness');
-fAccum.add(model.moss.uMossScale, 'value', 0.1, 4, 0.01).name('Patch Scale');
+fAccum.add(model.moss.uMossScale, 'value', 0.1, 4, 0.01).name(t('accumScale'));
 fAccum.add(model.moss.uMossEdge, 'value', 0.01, 0.4, 0.005).name('Patch Softness');
-fAccum.add(model.moss.uMossSeed.value, 'x', -50, 50, 0.1).name('Seed X').listen();
-fAccum.add(model.moss.uMossSeed.value, 'y', -50, 50, 0.1).name('Seed Y').listen();
+fAccum.add(model.moss.uMossSeed.value, 'x', -50, 50, 0.1).name(t('accumSeedX')).listen();
+fAccum.add(model.moss.uMossSeed.value, 'y', -50, 50, 0.1).name(t('accumSeedY')).listen();
 fAccum
   .add(
     {
@@ -946,10 +947,10 @@ fAccum
     },
     'randomize'
   )
-  .name('🎲 Randomize Seed');
+  .name(t('accumRandomize'));
 fAccum.add(model.moss.uMossFlatThreshold, 'value', 0, 1, 0.01).name('Flatness Cutoff');
 fAccum.add(model.moss.uMossTexScale, 'value', 0.2, 8, 0.05).name('Texture Scale');
-fAccum.add(model.moss.uMossRoughness, 'value', 0, 2, 0.01).name('Roughness');
+fAccum.add(model.moss.uMossRoughness, 'value', 0, 2, 0.01).name(t('roughness'));
 fAccum.add(model.moss.uMossAoStrength, 'value', 0, 2, 0.01).name('AO Intensity');
 fAccum.add(model.moss.uMossBump, 'value', 0, 1.5, 0.01).name('Relief Strength');
 fAccum.add(model.moss.uMossBumpScale, 'value', 0.5, 8, 0.05).name('Relief Scale');
@@ -958,22 +959,22 @@ fModel.close();
 
 /* --- Grass ----------------------------------------------------------------- */
 const grassParams = { enabled: false, density: 0.13 };
-const fGrass = gui.addFolder('🌱 Grass');
+const fGrass = gui.addFolder(t('folderGrass'));
 fGrass
   .add(grassParams, 'enabled')
-  .name('Enabled')
+  .name(t('grassEnabled'))
   .onChange((v) => (grass.mesh.visible = v));
 fGrass
   .add(grassParams, 'density', 0, 1, 0.01)
-  .name('Density')
+  .name(t('grassCount'))
   .onChange((v) => grass.setDensity(v));
 
-const fGrassMask = fGrass.addFolder('Coverage Mask');
-fGrassMask.add(grass.uniforms.uCoverage, 'value', 0, 1, 0.01).name('Coverage');
-fGrassMask.add(grass.uniforms.uMaskScale, 'value', 0.02, 0.8, 0.001).name('Patch Scale');
-fGrassMask.add(grass.uniforms.uMaskEdge, 'value', 0.001, 0.4, 0.001).name('Patch Softness');
-fGrassMask.add(grass.uniforms.uMaskSeed.value, 'x', -50, 50, 0.1).name('Seed X').listen();
-fGrassMask.add(grass.uniforms.uMaskSeed.value, 'y', -50, 50, 0.1).name('Seed Y').listen();
+const fGrassMask = fGrass.addFolder(t('folderGrassMask'));
+fGrassMask.add(grass.uniforms.uCoverage, 'value', 0, 1, 0.01).name(t('grassCoverage'));
+fGrassMask.add(grass.uniforms.uMaskScale, 'value', 0.02, 0.8, 0.001).name(t('grassMaskScale'));
+fGrassMask.add(grass.uniforms.uMaskEdge, 'value', 0.001, 0.4, 0.001).name(t('grassEdge'));
+fGrassMask.add(grass.uniforms.uMaskSeed.value, 'x', -50, 50, 0.1).name(t('seedX')).listen();
+fGrassMask.add(grass.uniforms.uMaskSeed.value, 'y', -50, 50, 0.1).name(t('seedY')).listen();
 fGrassMask
   .add(
     {
@@ -985,7 +986,7 @@ fGrassMask
     },
     'randomize'
   )
-  .name('🎲 Randomize Seed');
+  .name(t('randomizeSeed'));
 fGrassMask.close();
 
 fGrass.add(grass.uniforms.uHeight, 'value', 0.2, 2.5, 0.01).name('Blade Height');
@@ -1001,25 +1002,25 @@ fGrass
   .onChange((v) => grass.uniforms.uColorTip.value.set(v));
 fGrass.add(grass.uniforms.uColorVarAmt, 'value', 0, 0.6, 0.01).name('Color Variation');
 fGrass.add(grass.uniforms.uTranslucency, 'value', 0, 2, 0.01).name('Translucency');
-fGrass.add(grass.material, 'roughness', 0, 1, 0.01).name('Roughness');
+fGrass.add(grass.material, 'roughness', 0, 1, 0.01).name(t('roughness'));
 fGrass.close();
 
 /* --- Wind ------------------------------------------------------------------ */
-const fWind = gui.addFolder('🍃 Wind');
-fWind.add(windState, 'strength', 0, 2, 0.01).name('Strength').onChange(applyWind);
-fWind.add(windState, 'speed', 0, 6, 0.01).name('Speed').onChange(applyWind);
-fWind.add(windState, 'direction', 0, 360, 1).name('Direction °').onChange(applyWind);
-fWind.add(windState, 'scale', 0.05, 1.5, 0.01).name('Gust Size').onChange(applyWind);
-fWind.add(windState, 'gust', 0, 1.5, 0.01).name('Flutter').onChange(applyWind);
+const fWind = gui.addFolder(t('folderWind'));
+fWind.add(windState, 'strength', 0, 2, 0.01).name(t('windStrength')).onChange(applyWind);
+fWind.add(windState, 'speed', 0, 6, 0.01).name(t('windSpeed')).onChange(applyWind);
+fWind.add(windState, 'direction', 0, 360, 1).name(t('windDir')).onChange(applyWind);
+fWind.add(windState, 'scale', 0.05, 1.5, 0.01).name(t('windGust')).onChange(applyWind);
+fWind.add(windState, 'gust', 0, 1.5, 0.01).name(t('windFlutter')).onChange(applyWind);
 fWind.close();
 
 /* --- Lighting -------------------------------------------------------------- */
-const fLight = gui.addFolder('Lighting');
-fLight.add(renderer, 'toneMappingExposure', 0, 3, 0.01).name('Exposure');
-fLight.add(keyLight, 'intensity', 0, 8, 0.01).name('Key');
-fLight.add(fillLight, 'intensity', 0, 4, 0.01).name('Fill');
-fLight.add(rimLight, 'intensity', 0, 400, 1).name('Rim');
-fLight.add(scene, 'environmentIntensity', 0, 2, 0.01).name('Env / IBL');
+const fLight = gui.addFolder(t('folderLighting'));
+fLight.add(renderer, 'toneMappingExposure', 0, 3, 0.01).name(t('exposure'));
+fLight.add(keyLight, 'intensity', 0, 8, 0.01).name(t('keyLight'));
+fLight.add(fillLight, 'intensity', 0, 4, 0.01).name(t('fillLight'));
+fLight.add(rimLight, 'intensity', 0, 400, 1).name(t('rimLight'));
+fLight.add(scene, 'environmentIntensity', 0, 2, 0.01).name(t('envIntensity'));
 
 const fogState = { enabled: true, density: scene.fog.density };
 function applyFog() {
@@ -1031,23 +1032,23 @@ fLight.close();
 
 /* --- Clouds (volumetric) --------------------------------------------------- */
 const cloudsParams = { enabled: false, driftDir: 17 };
-const fGFog = gui.addFolder('☁️ Clouds');
-fGFog.add(cloudsParams, 'enabled').name('Enabled').onChange((v) => fx.fog.setEnabled(v));
+const fGFog = gui.addFolder(t('folderClouds'));
+fGFog.add(cloudsParams, 'enabled').name(t('cloudsEnabled')).onChange((v) => fx.fog.setEnabled(v));
 
-const fGShape = fGFog.addFolder('Shape');
+const fGShape = fGFog.addFolder(t('folderCShape'));
 fGShape.add(fx.fog.uniforms.uBase, 'value', -3, 20, 0.05).name('Layer Height');
-fGShape.add(fx.fog.uniforms.uHeight, 'value', 0.2, 12, 0.1).name('Thickness');
+fGShape.add(fx.fog.uniforms.uHeight, 'value', 0.2, 12, 0.1).name(t('cloudThickness'));
 fGShape.add(fx.fog.uniforms.uHeightFalloff, 'value', 0, 1, 0.01).name('Ground Hug');
-fGShape.add(fx.fog.uniforms.uDensity, 'value', 0, 8, 0.02).name('Density');
-fGShape.add(fx.fog.uniforms.uCoverage, 'value', 0, 1, 0.01).name('Coverage');
+fGShape.add(fx.fog.uniforms.uDensity, 'value', 0, 8, 0.02).name(t('cloudDensity'));
+fGShape.add(fx.fog.uniforms.uCoverage, 'value', 0, 1, 0.01).name(t('cloudCoverage'));
 fGShape.add(fx.fog.uniforms.uCoverageEdge, 'value', 0.01, 0.5, 0.005).name('Billow Softness');
 fGShape.add(fx.fog.uniforms.uNoiseScale, 'value', 0.02, 0.6, 0.005).name('Billow Scale');
 fGShape.add(fx.fog.uniforms.uDetail, 'value', 0, 1, 0.01).name('Detail');
 fGShape.add(fx.fog.uniforms.uDetailScale, 'value', 1, 12, 0.1).name('Detail Scale');
 fGShape.add(fx.fog.uniforms.uEdgeFade, 'value', 0, 6, 0.1).name('Edge Fade');
 
-const fGMove = fGFog.addFolder('Motion');
-fGMove.add(fx.fog.uniforms.uWindSpeed, 'value', 0, 1, 0.005).name('Drift Speed');
+const fGMove = fGFog.addFolder(t('folderCMove'));
+fGMove.add(fx.fog.uniforms.uWindSpeed, 'value', 0, 1, 0.005).name(t('cloudSpeed'));
 fGMove
   .add(cloudsParams, 'driftDir', 0, 360, 1)
   .name('Drift Direction °')
@@ -1056,10 +1057,10 @@ fGMove
     fx.fog.uniforms.uWindDir.value.set(Math.cos(a), Math.sin(a));
   });
 
-const fGLight = fGFog.addFolder('Lighting & Color');
-fGLight.add(fx.fog.uniforms.uSunStrength, 'value', 0, 6, 0.02).name('Sun Scatter');
+const fGLight = fGFog.addFolder(t('folderCLight'));
+fGLight.add(fx.fog.uniforms.uSunStrength, 'value', 0, 6, 0.02).name(t('cloudSun'));
 fGLight.add(fx.fog.uniforms.uAniso, 'value', 0, 0.95, 0.01).name('Backlight (HG)');
-fGLight.add(fx.fog.uniforms.uAmbient, 'value', 0, 1, 0.01).name('Ambient Fill');
+fGLight.add(fx.fog.uniforms.uAmbient, 'value', 0, 1, 0.01).name(t('cloudAmbient'));
 fGLight
   .addColor({ c: '#cdd6dd' }, 'c')
   .name('Body Color')
@@ -1069,13 +1070,13 @@ fGLight
   .name('Scatter Color')
   .onChange((v) => fx.fog.uniforms.uSunColor.value.set(v));
 
-const fGPerf = fGFog.addFolder('Quality');
+const fGPerf = fGFog.addFolder(t('folderCQuality'));
 const fogRes = { scale: 0.5 };
 fGPerf
   .add(fogRes, 'scale', { Full: 1, Half: 0.5, Quarter: 0.25 })
   .name('Resolution')
   .onChange((v) => fx.fog.setScale(Number(v)));
-fGPerf.add(fx.fog.uniforms.uSteps, 'value', 8, 96, 1).name('Steps');
+fGPerf.add(fx.fog.uniforms.uSteps, 'value', 8, 96, 1).name(t('cloudSteps'));
 fGPerf.add(fx.fog.uniforms.uLightSteps, 'value', 0, 8, 1).name('Light Steps');
 fGPerf.add(fx.fog.uniforms.uLightStepSize, 'value', 0.1, 2, 0.05).name('Light Step Size');
 
@@ -1086,7 +1087,7 @@ fGPerf.close();
 fGFog.close();
 
 /* --- Cinematic ------------------------------------------------------------- */
-const fCine = gui.addFolder('🎬 Cinematic');
+const fCine = gui.addFolder(t('folderCine'));
 
 // Anti-aliasing: MSAA happens inside the composer (the renderer's own AA is
 // bypassed by post-processing). Higher = smoother thin grass, a bit more cost.
@@ -1097,38 +1098,38 @@ fCine
   .name('Anti-aliasing')
   .onChange((v) => fx.setSamples(Number(v)));
 
-const fCam = fCine.addFolder('Camera');
-fCam.add(cine, 'autoOrbit').name('Auto Orbit').onChange((v) => (controls.autoRotate = v));
+const fCam = fCine.addFolder(t('folderCam'));
+fCam.add(cine, 'autoOrbit').name(t('autoOrbit')).onChange((v) => (controls.autoRotate = v));
 fCam
   .add(cine, 'orbitSpeed', -3, 3, 0.05)
-  .name('Orbit Speed')
+  .name(t('orbitSpeed'))
   .onChange((v) => (controls.autoRotateSpeed = v));
-fCam.add(cine, 'fov', 18, 80, 1).name('Focal / FOV').onChange((v) => {
+fCam.add(cine, 'fov', 18, 80, 1).name(t('fov')).onChange((v) => {
   camera.fov = v;
   camera.updateProjectionMatrix();
 });
-fCam.add(cine, 'letterbox').name('Letterbox').onChange(applyLetterbox);
+fCam.add(cine, 'letterbox').name(t('letterbox')).onChange(applyLetterbox);
 
 const dofParams = { enabled: false };
 fx.bokeh.enabled = dofParams.enabled; // off by default — opt in when framing
-const fDof = fCine.addFolder('Depth of Field');
-fDof.add(dofParams, 'enabled').name('Enable DoF').onChange((v) => (fx.bokeh.enabled = v));
+const fDof = fCine.addFolder(t('folderDof'));
+fDof.add(dofParams, 'enabled').name(t('dofEnabled')).onChange((v) => (fx.bokeh.enabled = v));
 fDof
   .add(fx.bokeh.uniforms.focus, 'value', 1, 40, 0.1)
-  .name('Focus Distance')
+  .name(t('focusDistance'))
   .onChange(showFocusPlane);
-fDof.add(fx.bokeh.uniforms.aperture, 'value', 0, 0.004, 0.00005).name('Aperture');
-fDof.add(fx.bokeh.uniforms.maxblur, 'value', 0, 0.02, 0.0005).name('Max Blur');
+fDof.add(fx.bokeh.uniforms.aperture, 'value', 0, 0.004, 0.00005).name(t('aperture'));
+fDof.add(fx.bokeh.uniforms.maxblur, 'value', 0, 0.02, 0.0005).name(t('maxBlur'));
 
-const fFx = fCine.addFolder('Effects');
-fFx.add(fx.bloom, 'strength', 0, 2, 0.01).name('Bloom');
-fFx.add(fx.bloom, 'radius', 0, 2, 0.01).name('Bloom Radius');
-fFx.add(fx.bloom, 'threshold', 0, 1, 0.01).name('Bloom Threshold');
-fFx.add(fx.grade.uniforms.uGrain, 'value', 0, 0.25, 0.005).name('Film Grain');
-fFx.add(fx.grade.uniforms.uVignette, 'value', 0, 1.5, 0.01).name('Vignette');
-fFx.add(fx.grade.uniforms.uChroma, 'value', 0, 0.01, 0.0001).name('Chromatic Aberration');
-fFx.add(fx.grade.uniforms.uContrast, 'value', 0.7, 1.6, 0.01).name('Contrast');
-fFx.add(fx.grade.uniforms.uSaturation, 'value', 0, 2, 0.01).name('Saturation');
+const fFx = fCine.addFolder(t('folderFx'));
+fFx.add(fx.bloom, 'strength', 0, 2, 0.01).name(t('bloom'));
+fFx.add(fx.bloom, 'radius', 0, 2, 0.01).name(t('bloomRadius'));
+fFx.add(fx.bloom, 'threshold', 0, 1, 0.01).name(t('bloomThreshold'));
+fFx.add(fx.grade.uniforms.uGrain, 'value', 0, 0.25, 0.005).name(t('filmGrain'));
+fFx.add(fx.grade.uniforms.uVignette, 'value', 0, 1.5, 0.01).name(t('vignette'));
+fFx.add(fx.grade.uniforms.uChroma, 'value', 0, 0.01, 0.0001).name(t('chromaticAberration'));
+fFx.add(fx.grade.uniforms.uContrast, 'value', 0.7, 1.6, 0.01).name(t('contrast'));
+fFx.add(fx.grade.uniforms.uSaturation, 'value', 0, 2, 0.01).name(t('saturation'));
 fCine.close();
 
 /* -------------------------------------------------------------------------- */
